@@ -33,7 +33,7 @@ AVAILABLE_LLMS = [
     "deepseek/deepseek-r1-distill-llama-70b",
 ]
 LLM_MODEL_NAME = os.getenv("LLM_MODEL_NAME", "google/gemini-2.5-flash")
-OPENROUTER_TIMEOUT_SECONDS = float(os.getenv("OPENROUTER_TIMEOUT_SECONDS", "45"))
+OPENROUTER_TIMEOUT_SECONDS = float(os.getenv("OPENROUTER_TIMEOUT_SECONDS", "15"))
 EMBEDDING_BATCH_SIZE = int(os.getenv("EMBEDDING_BATCH_SIZE", "16"))
 
 SUPPORTED_EXTENSIONS = [".pdf", ".docx", ".txt", ".md", ".png", ".jpg", ".jpeg"]

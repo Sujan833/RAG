@@ -115,6 +115,7 @@ def llm_refine_query(
             ],
             temperature=0.0,
             max_tokens=60,
+            timeout=5.0,
         )
 
         refined = str(response.choices[0].message.content or "").strip().strip('"').strip("'")

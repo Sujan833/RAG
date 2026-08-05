@@ -9,27 +9,24 @@ from config import RERANKER_MODEL_NAME
 
 @lru_cache(maxsize=1)
 def load_reranker_model() -> Optional[CrossEncoder]:
-    """Load the CPU cross-encoder from local cache with fallback if unavailable."""
+    """Load the CPU cross-encoder with in-memory singleton caching and online fallback."""
+    # 1. Try loading from local HuggingFace cache first
     try:
-        previous_hf_hub_offline = os.environ.get("HF_HUB_OFFLINE")
-        previous_transformers_offline = os.environ.get("TRANSFORMERS_OFFLINE")
-        os.environ["HF_HUB_OFFLINE"] = "1"
-        os.environ["TRANSFORMERS_OFFLINE"] = "1"
-        try:
-            return CrossEncoder(
-                RERANKER_MODEL_NAME,
-                device="cpu",
-                local_files_only=True,
-            )
-        finally:
-            if previous_hf_hub_offline is None:
-                os.environ.pop("HF_HUB_OFFLINE", None)
-            else:
-                os.environ["HF_HUB_OFFLINE"] = previous_hf_hub_offline
-            if previous_transformers_offline is None:
-                os.environ.pop("TRANSFORMERS_OFFLINE", None)
-            else:
-                os.environ["TRANSFORMERS_OFFLINE"] = previous_transformers_offline
+        return CrossEncoder(
+            RERANKER_MODEL_NAME,
+            device="cpu",
+            local_files_only=True,
+        )
+    except Exception:
+        pass
+
+    # 2. Try loading online from HuggingFace Hub
+    try:
+        return CrossEncoder(
+            RERANKER_MODEL_NAME,
+            device="cpu",
+            local_files_only=False,
+        )
     except Exception:
         return None
 

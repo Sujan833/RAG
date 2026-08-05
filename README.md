@@ -1,193 +1,115 @@
-# 📚 Universal Hybrid RAG Chatbot
+# 📚 Multimodal Self-Healing RAG Engine
 
-## Overview
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B.svg)](https://streamlit.io/)
+[![FAISS](https://img.shields.io/badge/VectorDB-FAISS-00A88F.svg)](https://github.com/facebookresearch/faiss)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-This project is a **Universal Hybrid Retrieval-Augmented Generation (RAG) Chatbot** that can answer questions from uploaded documents by retrieving the most relevant information before generating a response.
-
-Unlike a traditional chatbot, the model does **not rely only on its pre-trained knowledge**. Instead, it first searches through the uploaded documents, retrieves the most relevant chunks, reranks them, and then generates a grounded answer based only on the retrieved context.
-
-The system is designed to work with different types of documents such as:
-
-* PDF
-* DOCX
-* TXT
-* Markdown
-* Technical Documentation
-* Research Papers
-* Company Policies
-* Books
-* Stories
-* Legal Documents
-* Reports
+An enterprise-grade **Multimodal Self-Healing Corrective RAG (CRAG)** system built for high-precision document retrieval and grounded question answering over complex legal PDFs, scanned bank statements, student ID cards, tables, and multi-format documents.
 
 ---
 
-# 🔧 Technologies Used
+## 🌟 Key Features
 
-| Component            | Technology                  |
-| -------------------- | --------------------------- |
-| Programming Language | Python                      |
-| Frontend             | Streamlit                   |
-| LLM                  | OpenRouter API              |
-| Embedding Model      | BAAI/bge-base-en-v1.5       |
-| Vector Database      | FAISS                       |
-| Sparse Retrieval     | BM25                        |
-| Reranker             | BGE Reranker                |
-| Framework            | LangChain                   |
-| Document Processing  | Universal Semantic Chunking |
+* 🧠 **Self-Healing CRAG Engine**: Evaluates retrieval relevance scores in real time. If initial candidate scores fall below quality thresholds, it triggers an LLM-driven query refinement loop to fix typos, OCR noise, and expand synonyms.
+* 🖼️ **Multi-Engine Neural OCR**: Combines **PyMuPDF (`fitz`)**, **RapidOCR**, **Docling (v2.15+)**, **EasyOCR**, and **Pytesseract** with spatial bounding box `(y0, x0)` reading-order reconstruction.
+* ⚡ **Hybrid Search (FAISS + BM25)**: Blends dense semantic vector search (`all-MiniLM-L6-v2`) with BM25 sparse keyword matching for exact serial numbers, account IDs, and section codes.
+* 🎯 **BGE Cross-Encoder Reranking**: Reranks top candidate passages using `BAAI/bge-reranker-base` to achieve 95%+ confidence grounded answers.
+* 🎨 **Glassmorphism Streamlit Portal**: Features a 4-page workspace UI (`💬 Main Chat`, `📁 Document Manager`, `🧠 Architecture Guide`, `❓ Help & FAQ`).
+* 📁 **Full Document Lifecycle**: Direct upload, single-file deletion, clear all, and one-click incremental vector database re-indexing.
+* 🛡️ **Zero Hallucination Guarantee**: Strict grounding prompt forces the LLM to output accurate answers backed by page-level citations.
 
 ---
 
-# 🧠 How This RAG Works
-
-The workflow of the project is:
+## 🏗️ Architecture Pipeline
 
 ```
-Upload Documents
+[ User Input Query ]
         │
         ▼
-Document Chunking
-        │
+[ Step 1: LLM Query Refinement & Expansion ]
+        │ ──► Fixes typos & expands synonyms while preserving exact IDs/numbers
         ▼
-Generate Embeddings
-        │
+[ Step 2: Hybrid Search (FAISS + BM25) ]
+        │ ──► Dense Vector Similarity + Sparse Keyword Precision
         ▼
-Store in FAISS Vector Database
-        │
+[ Step 3: Relevance Evaluation & Self-Healing Loop ]
+        │ ──► Evaluates top context score against threshold (0.35)
+        │ ──► If low score, triggers self-healing query rewrite (Max 2 retries)
         ▼
-Create BM25 Keyword Index
-        │
+[ Step 4: BGE Cross-Encoder Reranker ]
+        │ ──► Reranks top candidates with BAAI/bge-reranker-base
         ▼
-User asks a Question
-        │
-        ▼
-Hybrid Retrieval
-(BM25 + FAISS)
-        │
-        ▼
-BGE Reranker
-        │
-        ▼
-Most Relevant Chunks
-        │
-        ▼
-OpenRouter LLM
-        │
-        ▼
-Grounded Response
+[ Step 5: Grounded Answer Generation ]
+        │ ──► Produces 95%+ Confidence response with exact page citations
 ```
-
-The chatbot answers questions using only the relevant information retrieved from the uploaded documents, helping reduce hallucinations and improve answer accuracy.
 
 ---
 
-# 🚀 Running the Project
+## 🚀 Quick Start & Installation
 
-## 1. Create a Virtual Environment
+### 1. Clone Repository
+```bash
+git clone https://github.com/Sujan833/RAG.git
+cd RAG
+```
 
+### 2. Set Up Virtual Environment & Install Dependencies
 ```bash
 python -m venv venv
-```
+# On Windows PowerShell:
+.\venv\Scripts\activate
+# On Linux/macOS:
+source venv/bin/activate
 
----
-
-## 2. Activate the Virtual Environment
-
-### Windows (Command Prompt)
-
-```cmd
-venv\Scripts\activate
-```
-
-### Windows (PowerShell)
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
----
-
-## 3. Install Required Packages
-
-```bash
 pip install -r requirements.txt
 ```
 
----
-
-## 4. Start the Application
-
+### 3. Launch Streamlit Application
 ```bash
 streamlit run app.py
 ```
 
 ---
 
-# 📄 Using the Application
+## 📁 Project Structure
 
-1. Open the Streamlit application in your browser.
-2. Select the embedding model.
-3. Select the reranker model.
-4. Select the LLM (OpenRouter model).
-5. Upload one or more documents.
-6. Click **Process Documents** to build the vector database.
-7. Ask questions related to the uploaded documents.
-8. The chatbot retrieves the most relevant chunks and generates a grounded answer.
-
----
-
-# 📌 Features
-
-* Hybrid Retrieval (FAISS + BM25)
-* Semantic Document Chunking
-* Dense Vector Search
-* Keyword-Based Search
-* Cross-Encoder Reranking
-* Grounded Answer Generation
-* Multiple Document Support
-* Streamlit User Interface
-* OpenRouter LLM Integration
-* Modular and Extensible Architecture
-
----
-
-# 📁 Project Structure
-
-```
-project/
-│── app.py
-│── ingest.py
-│── retrieve.py
-│── chunking.py
-│── reranker.py
-│── embeddings.py
-│── config.py
-│── prompt.py
-│── requirements.txt
-│── data/
-│── vector_db/
-│── utils/
-└── README.md
+```text
+RAG/
+├── app.py                      # Multi-Page Glassmorphism Streamlit Portal UI
+├── config.py                   # System Configuration & Model Registry
+├── ingest.py                   # Incremental Batch Vector Ingestion Engine
+├── rag.py                      # Hybrid Search + BGE Reranker + Self-Healing Engine
+├── requirements.txt            # Project Dependencies
+├── utils/
+│   ├── chunking.py             # Adaptive Layout-Aware Text Chunking
+│   ├── document_parsers.py     # Multi-Engine Neural OCR & Layout Reconstruction
+│   ├── embeddings.py           # Unified Sentence-Transformers Embedding Loader
+│   ├── patch_torchvision.py    # Windows C++ Memory Access Lock Patch
+│   ├── prompt.py               # Grounded Zero-Hallucination Prompt Builder
+│   ├── reranker.py             # BGE Cross-Encoder Reranker
+│   └── vector_store.py         # FAISS Index + BM25 Sparse Search Engine
+└── tests/                      # Core Pytest Test Suite
 ```
 
 ---
 
-# 🎯 Future Improvements
+## 🛠️ Configuration & Environment Variables
 
-* Marker-based intelligent document parsing
-* Multimodal RAG (Text + Images)
-* OCR support for scanned documents
-* Parent-Child Retrieval
-* Metadata Filtering
-* Query Expansion
-* Citation Generation
-* Conversation Memory
-* Agentic AI Workflows
+You can customize system parameters via environment variables or inside `config.py`:
+
+| Parameter | Default | Description |
+| :--- | :--- | :--- |
+| `LLM_MODEL_NAME` | `google/gemini-2.5-flash` | Default OpenRouter LLM |
+| `EMBEDDING_MODEL_NAME` | `sentence-transformers/all-MiniLM-L6-v2` | FAISS Vector Embedding Model |
+| `RERANKER_MODEL_NAME` | `BAAI/bge-reranker-base` | Cross-Encoder Reranking Model |
+| `RELEVANCE_THRESHOLD` | `0.35` | Self-Healing Trigger Quality Threshold |
+| `MAX_SELF_HEAL_ITERATIONS` | `2` | Maximum Self-Correction Retries |
 
 ---
 
-## Author
+## 🤝 Author & Contributions
 
-**Sujan**
+Built with ❤️ by **Akula Sujan** ([@Sujan833](https://github.com/Sujan833)).
 
-Computer Science Engineering (Artificial Intelligence)
+Feel free to open issues or submit pull requests for features and enhancements!
